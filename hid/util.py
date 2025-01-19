@@ -1,4 +1,6 @@
-from pynput.keyboard import Key, KeyCode, Listener
+import logging
+from pynput.keyboard import Key, KeyCode
+from pynput.mouse import Button
 
 
 def keys_to_scancode(keys):
@@ -60,5 +62,27 @@ def keys_to_scancode(keys):
                 # We should send KEY_ERR_OVF
                 # But for now, just ignore the extra keys
                 continue
+        else:
+            logging.warning(f"Unknown key: {k}")
 
     return bytes(scancode)
+
+
+def mouse_to_relative_event(dx=0, dy=0, buttons=(), scroll=0):
+    """
+    Convert mouse movement to a 5-byte relative mouse event
+    """
+    dx = max(-127, min(127, dx))
+    dy = max(-127, min(127, dy))
+    scroll = max(-127, min(127, scroll))
+
+    event = [0x00 for _ in range(5)]
+    event[0] = 0x01
+    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02}
+    for b in buttons:
+        event[1] |= button_mapping[b]
+    event[2] = dx.to_bytes(1, "big", signed=True)[0]
+    event[3] = dy.to_bytes(1, "big", signed=True)[0]
+    event[4] = scroll.to_bytes(1, "big", signed=True)[0]
+
+    return bytes(event)
