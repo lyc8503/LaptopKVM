@@ -36,4 +36,6 @@ class CH9329:
 
             # Response from CH9329, 7 bytes
             ret = self.port.read(7)
+
+            # TODO: handle CapsLock status switch
             assert ret[5] == 0x00, f"ERROR: {ret}"

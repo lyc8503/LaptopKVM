@@ -79,6 +79,7 @@ def mouse_to_relative_event(dx=0, dy=0, buttons=(), scroll=0):
     event = [0x00 for _ in range(5)]
     event[0] = 0x01
     button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02}
+    # TODO: not in mapping
     for b in buttons:
         event[1] |= button_mapping[b]
     event[2] = dx.to_bytes(1, "big", signed=True)[0]
