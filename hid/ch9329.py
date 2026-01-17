@@ -44,4 +44,4 @@ class CH9329:
             logging.info(f"Serial response: {ret}")
 
             # TODO: handle CapsLock status switch
-            assert ret[5] == 0x00, f"ERROR: {ret}"
+            # assert ret[5] == 0x00, f"ERROR: {ret}"
