@@ -10,6 +10,10 @@ class CH9329:
     def send_scancode(self, scancode: bytes):
         assert len(scancode) == 8, "Keyboard scancode must be 8 bytes long"
         self.send(b"\x02", scancode)
+    
+    def send_absolute_mouse(self, mouseevt: bytes):
+        assert len(mouseevt) == 7, "Abs mouse event must be 7 bytes long"
+        self.send(b"\x04", mouseevt)
 
     def send_relative_mouse(self, mouseevt: bytes):
         assert len(mouseevt) == 5, "Mouse event must be 5 bytes long"
@@ -28,7 +32,7 @@ class CH9329:
         packet = HEAD + ADDR + cmd + LEN + data
         SUM = sum(packet) % 256
         packet += SUM.to_bytes(1)
-        logging.debug(f"Serial packet: {packet}")
+        logging.info(f"Serial packet: {packet}")
 
         with self.lock:
             # Send packet
@@ -36,6 +40,8 @@ class CH9329:
 
             # Response from CH9329, 7 bytes
             ret = self.port.read(7)
+
+            logging.info(f"Serial response: {ret}")
 
             # TODO: handle CapsLock status switch
             assert ret[5] == 0x00, f"ERROR: {ret}"

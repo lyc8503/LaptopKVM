@@ -87,3 +87,30 @@ def mouse_to_relative_event(dx=0, dy=0, buttons=(), scroll=0):
     event[4] = scroll.to_bytes(1, "big", signed=True)[0]
 
     return bytes(event)
+
+
+def mouse_to_absolute_event(x=0, y=0, buttons=(), scroll=0, max_x=32767, max_y=32767):
+    """
+    Convert absolute mouse position to a HID absolute mouse event.
+
+    Report format (7 bytes):
+    [report_id=0x02, buttons, x_l, x_h, y_l, y_h, wheel]
+    """
+    x = max(0, min(int(x), int(max_x)))
+    y = max(0, min(int(y), int(max_y)))
+    scroll = max(-127, min(127, int(scroll)))
+
+    event = [0x00 for _ in range(7)]
+    event[0] = 0x02
+    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02}
+    # TODO: not in mapping
+    for b in buttons:
+        event[1] |= button_mapping[b]
+
+    event[2] = x.to_bytes(2, "little", signed=False)[0]
+    event[3] = x.to_bytes(2, "little", signed=False)[1]
+    event[4] = y.to_bytes(2, "little", signed=False)[0]
+    event[5] = y.to_bytes(2, "little", signed=False)[1]
+    event[6] = scroll.to_bytes(1, "big", signed=True)[0]
+
+    return bytes(event)
