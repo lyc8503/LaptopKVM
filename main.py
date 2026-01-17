@@ -15,7 +15,7 @@ ch9329_serial = serial.Serial("COM4", 115200, timeout=1)
 ch9329_dev = CH9329(ch9329_serial)
 
 mouse_listener = capture_and_forward_mouse(ch9329_dev)
-kbd_listener = capture_and_forward_keyboard(ch9329_dev, mouse_listener=mouse_listener)
+kbd_listener = capture_and_forward_keyboard(ch9329_dev)
 
 
 while True:
@@ -25,5 +25,6 @@ while True:
     if not mouse_listener.is_alive():
         kbd_listener.stop()
         break
+    kbd_listener._suppress = mouse_listener._suppress
     time.sleep(0.2)
 

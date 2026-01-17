@@ -4,7 +4,7 @@ from pynput.keyboard import Key, KeyCode, Listener
 from hid.util import keys_to_scancode
 
 
-def capture_and_forward_keyboard(dev, mouse_listener=None):
+def capture_and_forward_keyboard(dev):
     """
     Main method for control using pynput
     This method will capture the keyboard input and forward it to the serial port (ch9329)
@@ -27,7 +27,7 @@ def capture_and_forward_keyboard(dev, mouse_listener=None):
 
         if key not in keys:
             logging.info(f"On press: {key}, keys: {keys}")
-            if not mouse_listener._suppress:
+            if not listener._suppress:
                 return
             keys.add(key)
             sync_to_serial()
@@ -35,7 +35,7 @@ def capture_and_forward_keyboard(dev, mouse_listener=None):
     def on_release(key):
         if key in keys:
             logging.info(f"On release: {key}, keys: {keys}")
-            if not mouse_listener._suppress:
+            if not listener._suppress:
                 return
             keys.remove(key)
 
