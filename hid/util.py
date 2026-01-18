@@ -78,8 +78,7 @@ def mouse_to_relative_event(dx=0, dy=0, buttons=(), scroll=0):
 
     event = [0x00 for _ in range(5)]
     event[0] = 0x01
-    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02}
-    # TODO: not in mapping
+    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02, Button.x1: 0x08, Button.x2: 0x10}
     for b in buttons:
         event[1] |= button_mapping[b]
     event[2] = dx.to_bytes(1, "big", signed=True)[0]
@@ -102,8 +101,7 @@ def mouse_to_absolute_event(x=0, y=0, buttons=(), scroll=0, max_x=32767, max_y=3
 
     event = [0x00 for _ in range(7)]
     event[0] = 0x02
-    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02}
-    # TODO: not in mapping
+    button_mapping = {Button.left: 0x01, Button.middle: 0x04, Button.right: 0x02, Button.x1: 0x08, Button.x2: 0x10}
     for b in buttons:
         event[1] |= button_mapping[b]
 
